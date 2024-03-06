@@ -44,33 +44,31 @@ class PaymentInformationManagement
         $cartId,
         PaymentInterface $paymentMethod,
         AddressInterface $billingAddress = null
-    ) {
-
-        if($billingAddress === null){
-            return;
-        }
-
-        $extAttributes = $billingAddress->getExtensionAttributes();
-
-        if (!empty($extAttributes)) {
-            $quote = $this->quoteRepository->getActive($cartId);
-            $quote->setEcWantInvoice($extAttributes->getEcWantInvoice());
-            // This is a mapping of the customer vatId and the Taxvat
-            $vatData = array(
-                $extAttributes->getEcVatId(),
-                $extAttributes->getEcTaxvat()
-            );
-
-            if ($extAttributes->getEcWantInvoice() == "1") {
-                $quote->setEcInvoiceType($extAttributes->getEcInvoiceType());
-                $billingAddress->setCompany($extAttributes->getEcCompany());
-                $billingAddress->setVatId(implode(",", $vatData));
-                $billingAddress->setSdiCode($extAttributes->getEcSdiCode());
-            } else {
-                $quote->setEcInvoiceType("");
-                $billingAddress->setCompany("");
-                $billingAddress->setVatId("");
-                $billingAddress->setSdiCode("");
+    )
+    {
+        if ($billingAddress) {
+            $extAttributes = $billingAddress->getExtensionAttributes();
+            if (!empty($extAttributes)) {
+                $quote = $this->quoteRepository->getActive($cartId);
+                $quote->setEcWantInvoice($extAttributes->getEcWantInvoice());
+                // This is a mapping of the customer vatId and the Taxvat
+                $vatData = array(
+                    $extAttributes->getEcVatId(),
+                    $extAttributes->getEcTaxvat()
+                );
+                if ($extAttributes->getEcWantInvoice() == "1") {
+                    $quote->setEcInvoiceType($extAttributes->getEcInvoiceType());
+                    $billingAddress->setCompany($extAttributes->getEcCompany());
+                    $billingAddress->setVatId(implode(",", $vatData));
+                    $billingAddress->setPec($extAttributes->getEcPec());
+                    $billingAddress->setSdiCode($extAttributes->getEcSdiCode());
+                } else {
+                    $quote->setEcInvoiceType("");
+                    $billingAddress->setCompany("");
+                    $billingAddress->setPec("");
+                    $billingAddress->setVatId("");
+                    $billingAddress->setSdiCode("");
+                }
             }
         }
     }

@@ -5,6 +5,7 @@
 <?php $_telephone = $block->getLayout()->createBlock(\Magento\Customer\Block\Widget\Telephone::class) ?>
 <?php $_fax = $block->getLayout()->createBlock(\Magento\Customer\Block\Widget\Fax::class) ?>
 <?php $sdiCode = $block->getAddress()->getCustomAttribute('sdi_code'); ?>
+<?php $pec = $block->getAddress()->getCustomAttribute('pec'); ?>
 <form class="form-address-edit"
       action="<?= $block->escapeUrl($block->getSaveUrl()) ?>"
       method="post"
@@ -92,6 +93,21 @@
                            title="<?= /* @noEscape */ __('Codice destinatario (SDI)') ?>"
                            class="input-text <?= $block->escapeHtmlAttr($this->helper(\Magento\Customer\Helper\Address::class)->getAttributeValidationClass('sdi_code')) ?>"
                            id="sdi_code">
+                </div>
+            </div>
+        <?php endif; ?>
+        <?php if ($_company->isEnabled()) : ?>
+            <div class="field pec">
+                <label class="label" for="pec">
+                    <span><?= /* @noEscape */ __('Email PEC') ?></span>
+                </label>
+                <div class="control">
+                    <input type="email"
+                           name="pec"
+                           value="<?= (!empty($pec)) ? $pec->getValue() : ''; ?>"
+                           title="<?= /* @noEscape */ __('Email PEC') ?>"
+                           class="input-text <?= $block->escapeHtmlAttr($this->helper(\Magento\Customer\Helper\Address::class)->getAttributeValidationClass('pec')) ?>"
+                           id="pec">
                 </div>
             </div>
         <?php endif; ?>

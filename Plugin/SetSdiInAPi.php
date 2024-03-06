@@ -18,6 +18,7 @@ class SetSdiInAPi
         if ($result !== null) {
             $extensionAttributes = $result->getExtensionAttributes();
             $extensionAttributes->setData('sdi_code', $result->getSdiCode());
+            $extensionAttributes->setData('pec', $result->getPec());
             $result->setExtensionAttributes($extensionAttributes);
         }
 

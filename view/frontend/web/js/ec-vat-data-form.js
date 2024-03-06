@@ -21,7 +21,8 @@ function ($, ko, Form) {
                 'ec_company',
                 'ec_vat_id',
                 'ec_taxvat',
-                'ec_sdi_code'
+                'ec_sdi_code',
+                'ec_pec'
             ]
         },
 

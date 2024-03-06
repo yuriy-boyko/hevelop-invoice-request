@@ -13,9 +13,11 @@
         <attribute code="ec_vat_id" type="string"/>
         <attribute code="ec_taxvat" type="string"/>
         <attribute code="ec_sdi_code" type="string"/>
+        <attribute code="ec_pec" type="string"/>
 	</extension_attributes>
     <extension_attributes for="Magento\Sales\Api\Data\OrderAddressInterface">
         <attribute code="sdi_code" type="string"/>
+        <attribute code="pec" type="string"/>
     </extension_attributes>
     <extension_attributes for="Magento\Sales\Api\Data\OrderInterface">
         <attribute code="want_invoice" type="string"/>

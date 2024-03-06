@@ -6,15 +6,9 @@
   -->
 <div class="switch-field">
     <div class="ec-switch-invoice-type field choice">
-        <input type="radio"
-               data-bind="event: { change: setChecked }, checked: radioCheckValue, attr: { name: $parents[2].item.method + '_order_type', id: $parents[2].item.method + '_radio-private'}"
-               class="radio radio-private" value="private">
-        <label data-bind="i18n: 'Private', attr: { for: $parents[2].item.method + '_radio-private'}"></label>
-    </div>
-    <div class="ec-switch-invoice-type field choice">
-        <input type="radio"
-               data-bind="event: { change: setChecked }, checked: radioCheckValue, attr: { name: $parents[2].item.method + '_order_type', id: $parents[2].item.method + '_radio-business'}"
-               class="radio radio-business" value="business">
-        <label data-bind="i18n: 'Business', attr: { for: $parents[2].item.method + '_radio-business'}"></label>
+        <select data-bind="event: { change: setChecked }, attr: { name: 'payment_order_type', id: 'payment_radio-private'}, value: value">
+            <option data-bind="i18n: 'Private', attr: { for: 'payment_radio-private'}" value="private"></option>
+            <option data-bind="i18n: 'Business', attr: { for: 'payment_radio-business'}" value="business"></option>
+        </select>
     </div>
 </div>

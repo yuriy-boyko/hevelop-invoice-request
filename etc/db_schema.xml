@@ -20,11 +20,14 @@
     </table>
     <table name="quote_address">
         <column xsi:type="varchar" name="sdi_code" comment="Codice destinatario (SDI)"/>
+        <column xsi:type="varchar" name="pec" comment="Email PEC"/>
     </table>
     <table name="sales_order_address">
         <column xsi:type="varchar" name="sdi_code" comment="Codice destinatario (SDI)"/>
+        <column xsi:type="varchar" name="pec" comment="Email PEC"/>
     </table>
     <table name="customer_address_entity">
         <column xsi:type="varchar" name="sdi_code" comment="Codice destinatario (SDI)"/>
+        <column xsi:type="varchar" name="pec" comment="Email PEC"/>
     </table>
 </schema>

@@ -20,21 +20,23 @@ define([
 
             let isValid = true;
 
-            let vatFormListComponent = registry.get('checkout.steps.billing-step.payment.payments-list.before-place-order.ec-vat-data-form');
+            let vatFormListComponent = registry.get('checkout.steps.billing-step.payment.afterMethods.ec-vat-data-form');
 
-            let checkout = registry.get('checkout');
             let checkoutProvider = registry.get('checkoutProvider');
             let invoiceRequest = checkoutProvider.invoiceRequest;
             let ecInvoiceType = 'private';
-            let ecWantInvoice = typeof invoiceRequest !== "undefined" ? invoiceRequest.ec_want_invoice : false;
 
+            if (typeof invoiceRequest == 'undefined') {
+                return (isValid);
+            }
 
             let invoiceData = {
-                ec_want_invoice: ecWantInvoice,
+                ec_want_invoice: invoiceRequest.ec_want_invoice,
                 ec_company: '',
                 ec_vat_id: '',
                 ec_taxvat: '',
                 ec_sdi_code: '',
+                ec_pec: '',
                 ec_invoice_type: ''
             };
 
@@ -57,7 +59,6 @@ define([
                 invoiceData[index] = component.value();
             });
 
-            checkout.invoiceData = invoiceData;
 
             return (isValid);
         }

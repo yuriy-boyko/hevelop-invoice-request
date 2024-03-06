@@ -46,7 +46,7 @@ class GuestPaymentInformationManagement
      * @param $cartId
      * @param $email
      * @param PaymentInterface $paymentMethod
-     * @param AddressInterface $billingAddress
+     * @param AddressInterface|null $billingAddress
      * @throws NoSuchEntityException
      */
     public function beforeSavePaymentInformation(
@@ -56,9 +56,8 @@ class GuestPaymentInformationManagement
         PaymentInterface $paymentMethod,
         AddressInterface $billingAddress = null
     ) {
-
-        if($billingAddress === null){
-            return;
+        if(!$billingAddress){
+            return null;
         }
 
         $extAttributes = $billingAddress->getExtensionAttributes();
@@ -77,11 +76,13 @@ class GuestPaymentInformationManagement
                 $quote->setEcInvoiceType($extAttributes->getEcInvoiceType());
                 $billingAddress->setCompany($extAttributes->getEcCompany());
                 $billingAddress->setVatId(implode(",", $vatData));
+                $billingAddress->setPec($extAttributes->getEcPec());
                 $billingAddress->setSdiCode($extAttributes->getEcSdiCode());
             } else {
                 $quote->setEcInvoiceType("");
                 $billingAddress->setCompany("");
                 $billingAddress->setVatId("");
+                $billingAddress->setPec("");
                 $billingAddress->setSdiCode("");
             }
         }

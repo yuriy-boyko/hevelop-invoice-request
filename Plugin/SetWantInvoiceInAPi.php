@@ -10,9 +10,6 @@
 namespace Hevelop\InvoiceRequest\Plugin;
 
 use Magento\Sales\Api\OrderRepositoryInterface as Subject;
-use Magento\Framework\Api\SearchCriteriaInterface;
-use Magento\Sales\Api\Data\OrderSearchResultInterface;
-use Magento\Sales\Api\OrderRepositoryInterface;
 
 class SetWantInvoiceInAPi
 {
@@ -25,26 +22,6 @@ class SetWantInvoiceInAPi
             $result->setExtensionAttributes($extensionAttributes);
         }
 
-        return $result;
-    }
-
-    /**
-     * @param OrderRepositoryInterface $subject
-     * @param OrderSearchResultInterface $result
-     * @param SearchCriteriaInterface $searchCriteria
-     * @return OrderSearchResultInterface
-     */
-    public function afterGetList(
-        OrderRepositoryInterface $subject,
-        OrderSearchResultInterface $result,
-        SearchCriteriaInterface $searchCriteria
-    ): OrderSearchResultInterface {
-        foreach ($result->getItems() as $order) {
-            $extensionAttributes = $order->getExtensionAttributes();
-            $extensionAttributes->setData('want_invoice', $order->getEcWantInvoice());
-            $extensionAttributes->setData('invoice_type', $order->getEcInvoiceType());
-            $order->setExtensionAttributes($extensionAttributes);
-        }
         return $result;
     }
 }

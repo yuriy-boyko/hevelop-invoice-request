@@ -11,14 +11,13 @@ define([
     'ko',
     'Hevelop_InvoiceRequest/js/ec-vat-data-form',
     'Magento_Checkout/js/model/quote',
-    'uiRegistry',
-    'Magento_Ui/js/lib/validation/validator'
-], function (Abstract, $, ko, vatForm, quote, registry, validator) {
+    'uiRegistry'
+], function (Abstract, $, ko, vatForm, quote, registry) {
     'use strict';
 
     return Abstract.extend({
         defaults: {
-            vatFormListComponent: registry.get('checkout.steps.billing-step.payment.payments-list.before-place-order.ec-vat-data-form'),
+            vatFormListComponent: registry.get('checkout.steps.billing-step.payment.afterMethods.ec-vat-data-form'),
             radioCheckValue: ko.observable('private'),
             value: ko.observable()
         },
@@ -30,16 +29,20 @@ define([
 
             vatForm().isVatDataFormVisible.subscribe(function (value) {
                 if (value) {
-                    self.change('private');
-                } else {
-                    let vatFormFields = self.vatFormListComponent.childrenInputs;
-                    vatFormFields.forEach(function (index) {
-                        let component = self.vatFormListComponent.getChild(index);
-                        // eslint-disable-next-line max-len
-                        if (component.additionalClasses['ec_company'] || component.additionalClasses['ec_vat_id'] || component.additionalClasses['ec_taxvat']) {
-                            component.value('');
-                        }
-                    });
+                    if (self.radioCheckValue() === 'private') {
+                        self.change('private');
+                    } else {
+                        self.radioCheckValue('business');
+                        self.change('business');
+                        let vatFormFields = self.vatFormListComponent.childrenInputs;
+                        vatFormFields.forEach(function (index) {
+                            let component = self.vatFormListComponent.getChild(index);
+                            // eslint-disable-next-line max-len
+                            if (component.additionalClasses['ec_company'] || component.additionalClasses['ec_vat_id'] || component.additionalClasses['ec_taxvat'] || component.additionalClasses['ec_pec'] || component.additionalClasses['ec_sdi']) {
+                                component.value('');
+                            }
+                        });
+                    }
                 }
             });
 
@@ -58,6 +61,9 @@ define([
          * Change value of radio
          */
         change: function (value) {
+            if (this.vatFormListComponent === undefined) {
+                this.vatFormListComponent = registry.get('checkout.steps.billing-step.payment.afterMethods.ec-vat-data-form');
+            }
             if (value === 'business') {
                 this.setBusinessInputs();
             } else if (value === 'private') {
@@ -81,11 +87,11 @@ define([
                     component.value(taxvat);
                 }
 
-                if (component.additionalClasses['ec_company'] || component.additionalClasses['ec_vat_id'] || component.additionalClasses['ec_sdi_code']) {
+                if (component.additionalClasses['ec_company'] || component.additionalClasses['ec_vat_id'] || component.additionalClasses['ec_sdi_code'] || component.additionalClasses['ec_pec']) {
                     component.value('');
                 }
 
-                if (component.additionalClasses['ec_company'] || component.additionalClasses['ec_vat_id'] || component.additionalClasses['ec_sdi_code']) {
+                if (component.additionalClasses['ec_company'] || component.additionalClasses['ec_vat_id'] || component.additionalClasses['ec_sdi_code'] || component.additionalClasses['ec_pec']) {
                     component.required(false);
                     component.validation['required-entry'] = false;
                     component.visible(false);
@@ -129,13 +135,19 @@ define([
                             component.value(billingAddress.customAttributes.sdi_code.value);
                         }
                     }
+
+                    if (typeof billingAddress.customAttributes !== "undefined") {
+                        if (typeof billingAddress.customAttributes.pec !== 'undefined' && billingAddress.customAttributes.pec.value !== null && component.additionalClasses['ec_pec']) {
+                            component.value(billingAddress.customAttributes.pec.value);
+                        }
+                    }
                 }
 
                 if (taxvat !== null && component.additionalClasses['ec_taxvat']) {
                     component.value(taxvat);
                 }
 
-                if (component.additionalClasses['ec_company'] || component.additionalClasses['ec_vat_id'] || (country === 'IT' && component.additionalClasses['ec_sdi_code'])) {
+                if (component.additionalClasses['ec_company'] || component.additionalClasses['ec_vat_id'] || (country === 'IT' && component.additionalClasses['ec_sdi_code']) || (country === 'IT' && component.additionalClasses['ec_pec'])) {
                     component.required(true);
                     component.validation['required-entry'] = true;
                     component.visible(true);
@@ -148,31 +160,12 @@ define([
                 } else if (component.additionalClasses['ec_taxvat']) {
                     component.required(false);
                     component.validation['required-entry'] = false;
+                    component.validation['max_text_length'] = false;
                     component.error('');
                     component.error.valueHasMutated();
                     component.bubble('error', '');
                 }
             });
-        },
-
-        validate: function () {
-            var value = this.value(),
-                result = validator(this.validation, value, this.validationParams),
-                message = !this.disabled() && this.visible() ? result.message : '',
-                isValid = this.disabled() || !this.visible() || result.passed;
-
-            this.error(message);
-            this.error.valueHasMutated();
-            this.bubble('error', message);
-
-            if (this.source && !isValid) {
-                this.source.set('params.invalid', true);
-            }
-
-            return {
-                valid: isValid,
-                target: this
-            };
         }
     });
 });

@@ -46,6 +46,10 @@ define([
                 billingAddress['extensionAttributes']['ec_sdi_code'] = invoiceData.ec_sdi_code;
             }
 
+            if (invoiceData.ec_pec !== '') {
+                billingAddress['extensionAttributes']['ec_pec'] = invoiceData.ec_pec;
+            }
+
             if (invoiceData.ec_invoice_type !== '') {
                 billingAddress['extensionAttributes']['ec_invoice_type'] = invoiceData.ec_invoice_type;
             }

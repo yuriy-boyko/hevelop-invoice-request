@@ -15,7 +15,7 @@ define([
 ], function ($, registry, utils, validator, validation, $t) {
     'use strict';
 
-    let vatFormListComponent = registry.get('checkout.steps.billing-step.payment.payments-list.before-place-order.ec-vat-data-form');
+    let vatFormListComponent = registry.get('checkout.steps.billing-step.payment.afterMethods.ec-vat-data-form');
 
     validator.addRule(
         'validateVatIta',
@@ -57,7 +57,7 @@ define([
             let j;
             let s = 0;
 
-            if (value.length <= 0)
+            if (value === undefined || value.length <= 0)
                 return true;
 
             value = value.toUpperCase();
@@ -118,6 +118,10 @@ define([
                     ec_sdi_code: '',
                     ec_invoice_type: ''
                 };
+
+                if (vatFormListComponent === undefined) {
+                    vatFormListComponent = registry.get('checkout.steps.billing-step.payment.afterMethods.ec-vat-data-form');
+                }
 
                 let vatFormFields = vatFormListComponent.childrenInputs;
                 vatFormFields.forEach(function (index) {

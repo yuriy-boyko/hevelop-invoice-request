@@ -22,7 +22,7 @@ class CheckoutLayoutProcessor
         MagentoLayoutProcessor $subject,
         array $jsLayout
     ) {
-        $jsLayout['components']['checkout']['children']['steps']['children']['billing-step']['children']['payment']['children']['payments-list']['children']['before-place-order']['children']['ec_want_invoice'] = [
+        $jsLayout['components']['checkout']['children']['steps']['children']['billing-step']['children']['payment']['children']['afterMethods']['children']['ec_want_invoice'] = [
             'component' => 'Hevelop_InvoiceRequest/js/ec-want-invoice-checkbox',
             'sortOrder' => '900',
             'displayArea' => 'before-place-order',
@@ -40,7 +40,7 @@ class CheckoutLayoutProcessor
             'id' => 'want-invoice'
         ];
 
-        $jsLayout['components']['checkout']['children']['steps']['children']['billing-step']['children']['payment']['children']['payments-list']['children']['before-place-order']['children']['ec-vat-data-form'] = [
+        $jsLayout['components']['checkout']['children']['steps']['children']['billing-step']['children']['payment']['children']['afterMethods']['children']['ec-vat-data-form'] = [
             'component' => 'Hevelop_InvoiceRequest/js/ec-vat-data-form',
             'sortOrder' => '901',
             'displayArea' => 'before-place-order',
@@ -50,7 +50,7 @@ class CheckoutLayoutProcessor
             ]
         ];
 
-        $jsLayout['components']['checkout']['children']['steps']['children']['billing-step']['children']['payment']['children']['payments-list']['children']['before-place-order']['children']['ec-vat-data-form']['children']['ec_invoice_type'] = [
+        $jsLayout['components']['checkout']['children']['steps']['children']['billing-step']['children']['payment']['children']['afterMethods']['children']['ec-vat-data-form']['children']['ec_invoice_type'] = [
             'component' => 'Hevelop_InvoiceRequest/js/ec-radio',
             'displayArea' => 'ec-vat-data-form',
             'config' => [
@@ -64,7 +64,7 @@ class CheckoutLayoutProcessor
             'provider' => 'checkoutProvider',
             'visible' => true,
             'required' => false,
-            'additionalClasses' => 'ec_invoice_type_radios',
+            'additionalClasses' => 'ec_invoice_type_radios form-active',
             'validation' => [
                 'required-entry' => false
             ],
@@ -72,7 +72,7 @@ class CheckoutLayoutProcessor
             'id' => 'ec_invoice_type'
         ];
 
-        $jsLayout['components']['checkout']['children']['steps']['children']['billing-step']['children']['payment']['children']['payments-list']['children']['before-place-order']['children']['ec-vat-data-form']['children']['ec_company'] = [
+        $jsLayout['components']['checkout']['children']['steps']['children']['billing-step']['children']['payment']['children']['afterMethods']['children']['ec-vat-data-form']['children']['ec_company'] = [
             'component' => 'Hevelop_InvoiceRequest/js/ec-input',
             'displayArea' => 'ec-vat-data-form',
             'config' => [
@@ -96,7 +96,7 @@ class CheckoutLayoutProcessor
             'id' => 'ec_company'
         ];
 
-        $jsLayout['components']['checkout']['children']['steps']['children']['billing-step']['children']['payment']['children']['payments-list']['children']['before-place-order']['children']['ec-vat-data-form']['children']['ec_vat_id'] = [
+        $jsLayout['components']['checkout']['children']['steps']['children']['billing-step']['children']['payment']['children']['afterMethods']['children']['ec-vat-data-form']['children']['ec_vat_id'] = [
             'component' => 'Hevelop_InvoiceRequest/js/ec-input',
             'displayArea' => 'ec-vat-data-form',
             'config' => [
@@ -121,7 +121,7 @@ class CheckoutLayoutProcessor
             'id' => 'ec_vat_id'
         ];
 
-        $jsLayout['components']['checkout']['children']['steps']['children']['billing-step']['children']['payment']['children']['payments-list']['children']['before-place-order']['children']['ec-vat-data-form']['children']['ec_taxvat'] = [
+        $jsLayout['components']['checkout']['children']['steps']['children']['billing-step']['children']['payment']['children']['afterMethods']['children']['ec-vat-data-form']['children']['ec_taxvat'] = [
             'component' => 'Hevelop_InvoiceRequest/js/ec-input',
             'displayArea' => 'ec-vat-data-form',
             'config' => [
@@ -146,7 +146,7 @@ class CheckoutLayoutProcessor
             'id' => 'ec_taxvat'
         ];
 
-        $jsLayout['components']['checkout']['children']['steps']['children']['billing-step']['children']['payment']['children']['payments-list']['children']['before-place-order']['children']['ec-vat-data-form']['children']['ec_sdi_code'] = [
+        $jsLayout['components']['checkout']['children']['steps']['children']['billing-step']['children']['payment']['children']['afterMethods']['children']['ec-vat-data-form']['children']['ec_sdi_code'] = [
             'component' => 'Hevelop_InvoiceRequest/js/ec-input',
             'displayArea' => 'ec-vat-data-form',
             'config' => [
@@ -167,14 +167,43 @@ class CheckoutLayoutProcessor
                 'max_text_length' => 255,
                 'validateSdi' => true
             ],
-            'sortOrder' => 113,
+            'sortOrder' => 114,
             'id' => 'ec_sdi_code'
         ];
 
+        $jsLayout['components']['checkout']['children']['steps']['children']['billing-step']['children']['payment']['children']['afterMethods']['children']['ec-vat-data-form']['children']['ec_pec'] = [
+            'component' => 'Hevelop_InvoiceRequest/js/ec-input',
+            'displayArea' => 'ec-vat-data-form',
+            'config' => [
+                'customScope' => 'customInvoice',
+                'options' => [],
+                'template' => 'Hevelop_InvoiceRequest/ec-field',
+                'elementTmpl' => 'Hevelop_InvoiceRequest/ec-input',
+                'id' => 'ec_pec'
+            ],
+            'dataScope' => 'customInvoice.ec_pec',
+            'label' => __('Email PEC'),
+            'provider' => 'checkoutProvider',
+            'visible' => true,
+            'required' => false,
+            'additionalClasses' => 'ec_pec',
+            'validation' => [
+                'required-entry' => false,
+                'max_text_length' => 255,
+                'validate-email' => true
+            ],
+            'sortOrder' => 115,
+            'id' => 'ec_pec'
+        ];
+
         foreach ($jsLayout['components']['checkout']['children']['steps']['children']['billing-step']['children']
-                 ['payment']['children']['payments-list']['children'] as &$child) {
+                 ['payment']['children']['afterMethods']['children'] as &$child) {
             if (isset($child['children']['form-fields']['children']['sdi_code'])) {
                 unset($child['children']['form-fields']['children']['sdi_code']);
+            }
+
+            if (isset($child['children']['form-fields']['children']['pec'])) {
+                unset($child['children']['form-fields']['children']['pec']);
             }
 
             if (isset($child['children']['form-fields']['children']['vat_id'])) {
